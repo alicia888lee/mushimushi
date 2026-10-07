@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mushi Mushi — coming soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0012ed;--cream:#fffbf4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;background:var(--blue)}
+body{height:100%;min-height:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;font-family:'Unbounded','Arial Black',Helvetica,sans-serif;color:var(--cream);-webkit-tap-highlight-color:transparent;user-select:none}
+main{display:flex;flex-direction:column;align-items:center;gap:clamp(18px,4vh,40px);padding:20px;perspective:900px}
+.logo-wrap{width:min(62vw,36vh,380px);cursor:pointer;transform-style:preserve-3d;transition:transform .15s ease-out;animation:float 4s ease-in-out infinite}
+.logo-wrap img{width:100%;height:auto;display:block;pointer-events:none;-webkit-user-drag:none}
+.logo-wrap.pop{animation:pop .7s cubic-bezier(.3,1.6,.5,1)}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -10px}}
+@keyframes pop{0%{scale:1;rotate:0}25%{scale:.82 1.15;rotate:-6deg}55%{scale:1.12 .9;rotate:5deg}100%{scale:1;rotate:0}}
+.soon{display:flex;gap:.04em;font-weight:800;font-size:clamp(1.5rem,7.5vw,3.4rem);letter-spacing:-.02em;text-transform:lowercase;white-space:pre}
+.soon span{display:inline-block;transition:transform .25s cubic-bezier(.3,1.8,.5,1);animation:wave 2.4s ease-in-out infinite;animation-delay:calc(var(--i)*.09s)}
+.soon span:hover,.soon span.hop{transform:translateY(-.35em) rotate(-8deg) scale(1.15)}
+@keyframes wave{0%,60%,100%{translate:0 0}30%{translate:0 -.12em}}
+.hint{font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;opacity:.6}
+.spark{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--cream);pointer-events:none;animation:spark .8s ease-out forwards}
+@keyframes spark{to{transform:translate(var(--x),var(--y)) scale(0);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="logo-wrap" id="logo"><img src="MushiMushilogo.png" alt="Mushi Mushi"></div>
+  <div class="soon" id="soon" aria-label="coming soon"></div>
+</main>
+<script>
+const logo=document.getElementById('logo'),soon=document.getElementById('soon');
+// build letters
+[...'coming soon'].forEach((c,i)=>{const s=document.createElement('span');s.textContent=c;s.style.setProperty('--i',i);s.setAttribute('aria-hidden','true');
+  s.addEventListener('touchstart',()=>{s.classList.add('hop');setTimeout(()=>s.classList.remove('hop'),250)},{passive:true});soon.appendChild(s)});
+// tilt toward pointer
+function tilt(x,y){const nx=(x/innerWidth-.5)*2,ny=(y/innerHeight-.5)*2;
+  logo.style.transform=`rotateY(${nx*18}deg) rotateX(${-ny*18}deg)`}
+addEventListener('pointermove',e=>tilt(e.clientX,e.clientY));
+addEventListener('pointerleave',()=>logo.style.transform='');
+// device tilt on phones
+addEventListener('deviceorientation',e=>{if(e.gamma==null)return;
+  logo.style.transform=`rotateY(${Math.max(-25,Math.min(25,e.gamma))*.7}deg) rotateX(${Math.max(-25,Math.min(25,(e.beta-45)))*-.7}deg)`});
+// tap: squish + confetti
+logo.addEventListener('click',e=>{
+  logo.classList.remove('pop');void logo.offsetWidth;logo.classList.add('pop');
+  for(let i=0;i<14;i++){const s=document.createElement('i');s.className='spark';
+    const a=Math.random()*6.28,d=60+Math.random()*90;
+    s.style.left=e.clientX+'px';s.style.top=e.clientY+'px';
+    s.style.setProperty('--x',Math.cos(a)*d+'px');s.style.setProperty('--y',Math.sin(a)*d+'px');
+    document.body.appendChild(s);setTimeout(()=>s.remove(),800)}
+});
+</script>
+</body>
+</html>
