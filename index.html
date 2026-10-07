@@ -62,12 +62,12 @@ addEventListener('pointerleave',()=>logo.style.transform='');
 // device tilt on phones
 addEventListener('deviceorientation',e=>{if(e.gamma==null)return;
   logo.style.transform=`rotateY(${Math.max(-25,Math.min(25,e.gamma))*.7}deg) rotateX(${Math.max(-25,Math.min(25,(e.beta-45)))*-.7}deg)`});
-// email signup — paste your Formspree / form-service URL here (e.g. https://formspree.io/f/xxxxxx)
+// email signup — paste your Google Apps Script web app URL here (see setup steps)
 const ENDPOINT='https://script.google.com/macros/s/AKfycbx2jgPLlZygNwrJNfFZ_iUng1N8A87BbsV8tQ8vS7Yg5a1K9yKvGo89hHYOrx9Fj9Mg/exec';
 const form=document.getElementById('signup'),thanks=document.getElementById('thanks');
 form.addEventListener('submit',async e=>{e.preventDefault();
   const email=document.getElementById('email').value;
-  try{if(ENDPOINT){await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email})})}}catch(err){}
+  try{if(ENDPOINT){await fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({email})})}}catch(err){}
   form.hidden=true;thanks.hidden=false;logo.classList.remove('pop');void logo.offsetWidth;logo.classList.add('pop');
 });
 // tap: squish + confetti
