@@ -63,7 +63,7 @@ addEventListener('pointerleave',()=>logo.style.transform='');
 addEventListener('deviceorientation',e=>{if(e.gamma==null)return;
   logo.style.transform=`rotateY(${Math.max(-25,Math.min(25,e.gamma))*.7}deg) rotateX(${Math.max(-25,Math.min(25,(e.beta-45)))*-.7}deg)`});
 // email signup — paste your Formspree / form-service URL here (e.g. https://formspree.io/f/xxxxxx)
-const ENDPOINT='https://formspree.io/f/xrpeeazr';
+const ENDPOINT='https://script.google.com/macros/s/xxxxxxxx/exec';
 const form=document.getElementById('signup'),thanks=document.getElementById('thanks');
 form.addEventListener('submit',async e=>{e.preventDefault();
   const email=document.getElementById('email').value;
