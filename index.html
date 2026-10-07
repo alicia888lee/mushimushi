@@ -65,10 +65,11 @@ addEventListener('deviceorientation',e=>{if(e.gamma==null)return;
 // email signup — paste your Google Apps Script web app URL here (see setup steps)
 const ENDPOINT='https://script.google.com/macros/s/AKfycbx2jgPLlZygNwrJNfFZ_iUng1N8A87BbsV8tQ8vS7Yg5a1K9yKvGo89hHYOrx9Fj9Mg/exec';
 const form=document.getElementById('signup'),thanks=document.getElementById('thanks');
-form.addEventListener('submit',async e=>{e.preventDefault();
+form.addEventListener('submit',e=>{e.preventDefault();
   const email=document.getElementById('email').value;
-  try{if(ENDPOINT){await fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({email})})}}catch(err){}
+  // show thank-you instantly; send in the background (Apps Script can take a few seconds)
   form.hidden=true;thanks.hidden=false;logo.classList.remove('pop');void logo.offsetWidth;logo.classList.add('pop');
+  if(ENDPOINT){fetch(ENDPOINT,{method:'POST',mode:'no-cors',keepalive:true,body:new URLSearchParams({email})}).catch(()=>{})}
 });
 // tap: squish + confetti
 logo.addEventListener('click',e=>{
